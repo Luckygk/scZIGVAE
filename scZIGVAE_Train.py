@@ -50,6 +50,10 @@ def train(dec, optimizer,train_data,  device, true_label):
             ari = adjusted_rand_score(true_label, q)
             if res_ari <= ari:
                 res_ari = ari
+                np.save(
+                    f"/{args['name']}/cluster.npy", q)
+                np.save(
+                    f"/{args['name']}/embedding_data.npy",z.detach().numpy())
             delta_label = np.sum(y_pred != y_pred_last).astype(np.float32) / y_pred.shape[0]
             y_pred_last = y_pred
             if epoch > 0 and delta_label < 1e-3:
