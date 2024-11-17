@@ -77,8 +77,8 @@ def train(dec, optimizer,train_data,  device, true_label):
 
 if __name__ == "__main__":
     parse = argparse.ArgumentParser(prog='train', description='scZIGVAE train')
-    parse.add_argument("--dataset", type=str, default="Romanov")
-    parse.add_argument("--name", type=str, default="Romanov_counts")
+    parse.add_argument("--dataset", type=str, default="name")
+    parse.add_argument("--name", type=str, default="name")
     parse.add_argument('--num_hidden_layers', type=int, default=2, help='Number of hidden layers')
     parse.add_argument('--hidden_dims', type=int, default=[128, 128],
                        help='Output dimension for each hidden layer.')
