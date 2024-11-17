@@ -35,11 +35,11 @@ def pretrain(model, optimizer, train_data,  true_label, device):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="pretrain")
-    parser.add_argument("--dataset", type=str, default="Pollen")
-    parser.add_argument("--name", type=str, default="Pollen_counts")
+    parser.add_argument("--dataset", type=str, default="name")
+    parser.add_argument("--name", type=str, default="name")
     parser.add_argument("--max_epoch", type=int, default=200)
     parser.add_argument("--lr", type=float, default=5e-4)
-    parser.add_argument("--num_clusters", default=11, type=int)
+    parser.add_argument("--num_clusters", default=7, type=int)
     parser.add_argument("--num_heads", default=[3,3,3,3], type=int)
     parser.add_argument('--k', type=int, default=10, help='K of neighbors PKNN')
     parser.add_argument('--decoder_dim1', type=int, default=128,
