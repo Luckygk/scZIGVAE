@@ -29,7 +29,7 @@ def pretrain(model, optimizer, train_data,  true_label, device):
             kmeans = KMeans(n_clusters=args['num_clusters'], n_init=20).fit(z.detach().numpy())
             torch.save(
                 model.state_dict(),
-                f"./Pretrain/{args['name']}/{args['name']}.pkl"
+                f"./Pretrain/{args['name']}.pkl"
             )
 
 
@@ -54,12 +54,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     args = vars(args)
-    start_time = time.time()
     df = pd.read_csv('Dataset/{}/{}_labels.csv'.format(args['dataset'], args['name']))
     true_lab = df['label'].values
     adata = read_data('Dataset/{}/{}.csv'.format(args['dataset'], args['name']), file_type='csv')
-    adata = preprocess_raw_data1(adata)
-    X_hvg = process_data(adata)
+    adata_hvg , X_hvg = process_data(adata)
     np.save('Process/{}.npy'.format(args['datasetName']), X_hvg)
     distances, neighbors, cutoff, edgelist = Utils.get_edgelist_PKNN(datasetName=args['name'], X_hvg=X_hvg, k=args['k'],
                                                                      type='PKNN')
@@ -103,6 +101,3 @@ if __name__ == "__main__":
              train_data=train_data,
              true_label=true_lab,
              device=device)
-    end_time = time.time()
-    run_time = (end_time - start_time) / 60
-    print('cost of train: run time is %.2f ' % run_time, 'minutes')
