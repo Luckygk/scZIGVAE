@@ -4,9 +4,13 @@ from torch_geometric.utils import to_undirected
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
 import numpy as np
+import umap
+import matplotlib.pyplot as plt
 from sklearn.metrics.cluster import normalized_mutual_info_score as nmi_score
 from sklearn.metrics import adjusted_rand_score as ari_score
 from scipy.optimize import linear_sum_assignment
+
+
 
 def _correlation(data_numpy, k, corr_type='pearson'):
     df = pd.DataFrame(data_numpy.T)
@@ -72,6 +76,28 @@ def cluster_accuracy(y_true, y_pred):
     ind = np.array(ind).T
     acc = sum([w[i, j] for i, j in ind]) * 1.0 / y_pred.size
     return acc
+
+def plot_umap_clusters(cluster, embedding, output_folder, n_neighbors, min_dist,
+                            metric='euclidean'):
+    y_pred = np.load(cluster)
+    X = np.load(embedding)
+    reducer = umap.UMAP(n_neighbors=n_neighbors, min_dist=min_dist, metric=metric)
+    umap_embedding = reducer.fit_transform(X)
+    plt.figure(figsize=(6, 4))
+    plt.rcParams.update({'font.size': 10})
+    scatter = plt.scatter(umap_embedding[:, 0], umap_embedding[:, 1], c=y_pred, cmap='Spectral', s=7)
+    legend_handles = []
+    unique_labels = np.unique(y_pred)
+    for label in unique_labels:
+        legend_handles.append(plt.Line2D([0], [0], marker='o', markersize=10, linewidth=0, label=str(label),
+                                         markerfacecolor=scatter.cmap(scatter.norm(label)), markeredgecolor='none'))
+    plt.legend(handles=legend_handles, title="Cluster", loc="best")
+    title_font = {'family': 'Times New Roman', 'size': 13}
+    plt.title("scZIGVAE", fontdict=title_font)
+    plt.xlabel('UMAP1')
+    plt.ylabel('UMAP2')
+    plt.savefig(output_folder, dpi=300)
+    plt.show()
 
 def trajectory_analysis(embedding, cluster, output_folder):
     data = np.load(embedding)
